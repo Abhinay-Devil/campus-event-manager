@@ -6,6 +6,7 @@ import com.campus.eventmanager.model.User;
 import com.campus.eventmanager.service.UserService;
 
 import java.util.List;
+// Developed BY Abhinay Srivastava 
 
 @RestController
 @RequestMapping("/api/users")

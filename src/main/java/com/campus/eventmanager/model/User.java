@@ -11,6 +11,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+// Developed BY Abhinay Srivastava 
+
 public class User {
 
     @Id
@@ -31,3 +33,4 @@ public class User {
 
     private LocalDateTime createdAt;
 }
+// Developed BY Abhinay Srivastava 
