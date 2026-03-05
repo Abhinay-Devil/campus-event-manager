@@ -30,4 +30,10 @@ public class Event {
 
     private Boolean registrationOpen;
 
+    public boolean isRegistrationOpen() {
+    return registrationOpen;
+}
+
+// Developed BY Abhinay Srivastava
+
 }

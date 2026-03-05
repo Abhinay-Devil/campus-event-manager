@@ -22,17 +22,36 @@ public class RegistrationService {
     private final UserRepository userRepository;
     private final EventRepository eventRepository;
 
-    public Registration registerUser(Long userId, Long eventId) {
+   public Registration registerUser(Long userId, Long eventId) {
 
-    if (registrationRepository.existsByUser_IdAndEvent_Id(userId, eventId)) { 
+    if (registrationRepository.existsByUser_IdAndEvent_Id(userId, eventId)) {
         throw new ResponseStatusException(
-        HttpStatus.BAD_REQUEST,
-        "User already registered for this event"
-);
+                HttpStatus.BAD_REQUEST,
+                "User already registered for this event");
     }
 
-    User user = userRepository.findById(userId).orElseThrow();
-    Event event = eventRepository.findById(eventId).orElseThrow();
+    User user = userRepository.findById(userId)
+            .orElseThrow(() -> new ResponseStatusException(
+                    HttpStatus.NOT_FOUND,
+                    "User not found"));
+
+    Event event = eventRepository.findById(eventId)
+            .orElseThrow(() -> new ResponseStatusException(
+                    HttpStatus.NOT_FOUND,
+                    "Event not found"));
+
+    if (!event.isRegistrationOpen()) {
+        throw new ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                "Registration is closed for this event");
+    }
+long registeredCount = registrationRepository.countByEventId(eventId);
+
+    if (event.getCapacity() != null && registeredCount >= event.getCapacity()) {
+        throw new ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                "Event capacity full");
+    }
 
     Registration registration = Registration.builder()
             .user(user)
