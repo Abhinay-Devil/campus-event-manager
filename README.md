@@ -162,14 +162,6 @@ mvn spring-boot:run
 
 ---
 
-# 🌐 Server
-
-```id="6d4k2h"
-http://localhost:8080
-```
-
----
-
 # 🧪 API Testing
 
 You can test APIs using:
