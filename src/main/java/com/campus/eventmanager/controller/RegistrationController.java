@@ -8,17 +8,17 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/registrations")
+@RequestMapping("/api/events")
 @RequiredArgsConstructor
 public class RegistrationController {
 
     private final RegistrationService registrationService;
 
-    @PostMapping("/events/{eventId}/register")
+    @PostMapping("/{eventId}/register")
     @PreAuthorize("hasRole('STUDENT')")
-    public Registration register(@PathVariable Long eventId,
-            @RequestParam Long userId) {
-        return registrationService.registerUser(userId, eventId);
+    public Registration register(@PathVariable Long eventId){
+        return registrationService.register(eventId);
     }
 }
+
 // Developed BY Abhinay Srivastava

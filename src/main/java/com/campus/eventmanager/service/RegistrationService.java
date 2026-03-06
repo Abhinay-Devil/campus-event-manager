@@ -8,11 +8,11 @@ import com.campus.eventmanager.repository.RegistrationRepository;
 import com.campus.eventmanager.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
-
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import java.time.LocalDateTime;
+
 
 @Service
 @RequiredArgsConstructor
@@ -22,43 +22,39 @@ public class RegistrationService {
     private final UserRepository userRepository;
     private final EventRepository eventRepository;
 
-   public Registration registerUser(Long userId, Long eventId) {
+    public Registration register(Long eventId) {
 
-    if (registrationRepository.existsByUser_IdAndEvent_Id(userId, eventId)) {
-        throw new ResponseStatusException(
-                HttpStatus.BAD_REQUEST,
-                "User already registered for this event");
+        Authentication authentication =
+                SecurityContextHolder.getContext().getAuthentication();
+
+        String email = authentication.getName();
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new RuntimeException("Event not found"));
+
+        if (!event.isRegistrationOpen()) {
+            throw new RuntimeException("Registration closed");
+        }
+
+        long count = registrationRepository.countByEventId(eventId);
+
+        if (event.getCapacity() != null && count >= event.getCapacity()) {
+            throw new RuntimeException("Event full");
+        }
+
+        if (registrationRepository.existsByUser_IdAndEvent_Id(user.getId(), eventId)) {
+            throw new RuntimeException("Already registered");
+        }
+
+        Registration registration = Registration.builder()
+                .user(user)
+                .event(event)
+                .registeredAt(LocalDateTime.now())
+                .build();
+
+        return registrationRepository.save(registration);
     }
-
-    User user = userRepository.findById(userId)
-            .orElseThrow(() -> new ResponseStatusException(
-                    HttpStatus.NOT_FOUND,
-                    "User not found"));
-
-    Event event = eventRepository.findById(eventId)
-            .orElseThrow(() -> new ResponseStatusException(
-                    HttpStatus.NOT_FOUND,
-                    "Event not found"));
-
-    if (!event.isRegistrationOpen()) {
-        throw new ResponseStatusException(
-                HttpStatus.BAD_REQUEST,
-                "Registration is closed for this event");
-    }
-long registeredCount = registrationRepository.countByEventId(eventId);
-
-    if (event.getCapacity() != null && registeredCount >= event.getCapacity()) {
-        throw new ResponseStatusException(
-                HttpStatus.BAD_REQUEST,
-                "Event capacity full");
-    }
-
-    Registration registration = Registration.builder()
-            .user(user)
-            .event(event)
-            .registeredAt(LocalDateTime.now())
-            .build();
-
-    return registrationRepository.save(registration);
-}
 }

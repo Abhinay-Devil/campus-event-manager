@@ -7,6 +7,9 @@ import com.campus.eventmanager.service.UserService;
 import org.springframework.security.core.Authentication;
 import com.campus.eventmanager.repository.UserRepository;
 import java.util.List;
+import com.campus.eventmanager.model.Registration;
+import com.campus.eventmanager.repository.RegistrationRepository;
+
 // Developed BY Abhinay Srivastava 
 
 @RestController
@@ -16,6 +19,7 @@ public class UserController {
 
     private final UserService userService;
     private final UserRepository userRepository;
+    private final RegistrationRepository registrationRepository;
 
     @PostMapping
     public User createUser(@RequestBody User user) {
@@ -39,4 +43,16 @@ public class UserController {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
     }
+
+@GetMapping("/me/registrations")
+public List<Registration> getMyRegistrations(Authentication authentication) {
+
+    String email = authentication.getName();
+
+    User user = userRepository.findByEmail(email)
+            .orElseThrow(() -> new RuntimeException("User not found"));
+
+    return registrationRepository.findByUserId(user.getId());
+}
+
 }
