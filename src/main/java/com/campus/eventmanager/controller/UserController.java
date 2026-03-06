@@ -5,7 +5,6 @@ import org.springframework.web.bind.annotation.*;
 import com.campus.eventmanager.model.User;
 import com.campus.eventmanager.service.UserService;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import com.campus.eventmanager.repository.UserRepository;
 import java.util.List;
 // Developed BY Abhinay Srivastava 
