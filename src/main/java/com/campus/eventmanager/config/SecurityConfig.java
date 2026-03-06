@@ -2,30 +2,49 @@ package com.campus.eventmanager.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.config.Customizer;
+import com.campus.eventmanager.security.JwtFilter;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+
 
 @Configuration
+@EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
 
-    @Bean
-    public BCryptPasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+    private final JwtFilter jwtFilter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
-            .csrf(csrf -> csrf.disable())   // POST requests allow karega
+            .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
-                    .anyRequest().permitAll()   // saari APIs allow
-            )
-            .httpBasic(Customizer.withDefaults())
-            .formLogin(form -> form.disable());  // login page disable
+                    .requestMatchers("/api/auth/**").permitAll()
+                    .anyRequest().authenticated()
+            );
+
+        http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
+
+@Bean
+public AuthenticationManager authenticationManager(
+        AuthenticationConfiguration configuration) throws Exception {
+    return configuration.getAuthenticationManager();
+}
+
+@Bean
+public BCryptPasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder();
+}
+
 }
