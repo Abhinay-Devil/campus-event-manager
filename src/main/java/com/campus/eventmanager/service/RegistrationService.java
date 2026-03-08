@@ -57,4 +57,14 @@ public class RegistrationService {
 
         return registrationRepository.save(registration);
     }
+
+public void cancelRegistration(Long eventId, Long userId) {
+
+    Registration registration = registrationRepository
+            .findByUserIdAndEventId(userId, eventId)
+            .orElseThrow(() -> new RuntimeException("Registration not found"));
+
+    registrationRepository.delete(registration);
+}
+
 }

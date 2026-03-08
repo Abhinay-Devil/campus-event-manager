@@ -18,6 +18,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 @EnableWebSecurity
 @EnableMethodSecurity
 @RequiredArgsConstructor
+
+
 public class SecurityConfig {
 
     private final JwtFilter jwtFilter;
@@ -29,10 +31,11 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/api/users/**").permitAll()
-                        .anyRequest().authenticated());
-
+        .requestMatchers("/api/auth/**").permitAll()
+        .requestMatchers("/api/users/**").permitAll()
+        .requestMatchers("/api/events/**").permitAll()
+        .anyRequest().authenticated()
+);
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
@@ -49,4 +52,6 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
+
+    
 }
