@@ -4,10 +4,15 @@ import com.campus.eventmanager.model.Registration;
 import com.campus.eventmanager.service.RegistrationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import com.campus.eventmanager.model.User;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
+import com.campus.eventmanager.repository.UserRepository;
+
 
 @RestController
 @RequestMapping("/api/events")
@@ -15,13 +20,20 @@ import com.campus.eventmanager.model.User;
 public class RegistrationController {
 
     private final RegistrationService registrationService;
+    private final UserRepository userRepository;
+
 
     @DeleteMapping("/{eventId}/cancel")
 public ResponseEntity<String> cancelRegistration(
         @PathVariable Long eventId,
         Authentication authentication) {
 
-    User user = (User) authentication.getPrincipal();
+    UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+
+    String email = userDetails.getUsername();
+
+    User user = userRepository.findByEmail(email)
+            .orElseThrow(() -> new RuntimeException("User not found"));
 
     registrationService.cancelRegistration(eventId, user.getId());
 
