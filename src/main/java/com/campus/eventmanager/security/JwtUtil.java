@@ -8,14 +8,23 @@ import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.function.Function;
+
+// import java.util.HashMap;
+import java.util.Map;
+
+// import io.jsonwebtoken.security.Keys;
+import java.security.Key;
+// import java.util.Base64;
 
 import org.springframework.security.core.userdetails.UserDetails;
 
 @Component
 public class JwtUtil {
 
-    private final String SECRET_KEY = "mysecretkeymysecretkeymysecretkey12";
+private final Key SECRET_KEY = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+
 
     public String extractUsername(String token) {
         return extractClaims(token, Claims::getSubject);
@@ -28,7 +37,7 @@ public class JwtUtil {
 
     private Claims extractAllClaims(String token) {
         return Jwts.parserBuilder()
-                .setSigningKey(SECRET_KEY.getBytes())
+                .setSigningKey(SECRET_KEY)
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
@@ -41,12 +50,18 @@ public class JwtUtil {
         return username.equals(userDetails.getUsername());
     }
 
-    public String generateToken(String email) {
+    public String generateToken(UserDetails userDetails) {
+
+    Map<String, Object> claims = new HashMap<>();
+
+    claims.put("roles", userDetails.getAuthorities());
+
     return Jwts.builder()
-            .setSubject(email)
+            .setClaims(claims)
+            .setSubject(userDetails.getUsername())
             .setIssuedAt(new Date())
-            .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))
-            .signWith(Keys.hmacShaKeyFor(SECRET_KEY.getBytes()), SignatureAlgorithm.HS256)
+            .setExpiration(new Date(System.currentTimeMillis() + 86400000))
+            .signWith(SECRET_KEY, SignatureAlgorithm.HS256)
             .compact();
 }
 }
