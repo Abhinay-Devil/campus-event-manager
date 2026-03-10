@@ -187,5 +187,5 @@ You can test APIs using:
 
 **Abhinay Srivastava**
 
-Backend Developer
+Fullstack Developer
 Java | Spring Boot | PostgreSQL
