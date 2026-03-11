@@ -1,5 +1,6 @@
 package com.campus.eventmanager.service;
 
+import com.campus.eventmanager.dto.RegistrationDTO;
 import com.campus.eventmanager.model.Event;
 import com.campus.eventmanager.model.Registration;
 import com.campus.eventmanager.model.User;
@@ -13,6 +14,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import java.time.LocalDateTime;
 
+import com.campus.eventmanager.mapper.RegistrationMapper;
 
 @Service
 @RequiredArgsConstructor
@@ -22,7 +24,7 @@ public class RegistrationService {
     private final UserRepository userRepository;
     private final EventRepository eventRepository;
 
-    public Registration register(Long eventId) {
+    public RegistrationDTO register(Long eventId) {
 
         Authentication authentication =
                 SecurityContextHolder.getContext().getAuthentication();
@@ -55,7 +57,9 @@ public class RegistrationService {
                 .registeredAt(LocalDateTime.now())
                 .build();
 
-        return registrationRepository.save(registration);
+        Registration saved = registrationRepository.save(registration);
+
+return RegistrationMapper.toDTO(saved);
     }
 
 public void cancelRegistration(Long eventId, Long userId) {

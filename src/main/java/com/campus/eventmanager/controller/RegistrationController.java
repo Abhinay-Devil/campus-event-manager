@@ -1,6 +1,7 @@
 package com.campus.eventmanager.controller;
 
-import com.campus.eventmanager.model.Registration;
+import com.campus.eventmanager.dto.RegistrationDTO;
+// import com.campus.eventmanager.model.Registration;
 import com.campus.eventmanager.service.RegistrationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -43,9 +44,9 @@ public ResponseEntity<String> cancelRegistration(
 
     @PostMapping("/{eventId}/register")
    // @PreAuthorize("hasRole('STUDENT')")
-    public Registration register(@PathVariable Long eventId){
-        return registrationService.register(eventId);
-    }
+    public RegistrationDTO register(@PathVariable Long eventId){
+    return registrationService.register(eventId);
+}
 
 
 }
