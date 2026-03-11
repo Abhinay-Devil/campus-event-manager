@@ -1,9 +1,9 @@
 package com.campus.eventmanager.controller;
 
-import com.campus.eventmanager.model.Event;
+// import com.campus.eventmanager.model.Event;
 import com.campus.eventmanager.service.EventService;
 import lombok.RequiredArgsConstructor;
-
+import com.campus.eventmanager.dto.EventDTO;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,10 +16,10 @@ public class EventController {
 
     private final EventService eventService;
 
-  @PostMapping
+ @PostMapping
 @PreAuthorize("hasAnyRole('ADMIN','FACULTY')")
-public Event createEvent(@RequestBody Event event){
-    return eventService.createEvent(event);
+public EventDTO createEvent(@RequestBody EventDTO eventDTO){
+    return eventService.createEvent(eventDTO);
 }
 
 @DeleteMapping("/{id}")
@@ -30,18 +30,18 @@ public String deleteEvent(@PathVariable Long id) {
 }
 
 @GetMapping("/{id}")
-public Event getEventById(@PathVariable Long id) {
+public EventDTO getEventById(@PathVariable Long id){
     return eventService.getEventById(id);
 }
 
     @GetMapping
-    public List<Event> getAllEvents() {
-        return eventService.getAllEvents();
-    }
+public List<EventDTO> getAllEvents(){
+    return eventService.getAllEvents();
+}
 
 @PutMapping("/{id}")
-public Event updateEvent(@PathVariable Long id, @RequestBody Event event) {
-    return eventService.updateEvent(id, event);
+public EventDTO updateEvent(@PathVariable Long id, @RequestBody EventDTO eventDTO){
+    return eventService.updateEvent(id,eventDTO);
 }
 
 }

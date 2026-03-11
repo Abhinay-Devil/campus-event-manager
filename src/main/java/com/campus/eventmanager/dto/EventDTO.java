@@ -1,14 +1,15 @@
 package com.campus.eventmanager.dto;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class EventDTO {
 
     private Long id;
     private String title;
     private String description;
-    private LocalDate eventDate;
+    private LocalDateTime eventDate;
     private String location;
+    private int capacity;
 
     public EventDTO(){}
 
@@ -36,11 +37,11 @@ public class EventDTO {
         this.description = description;
     }
 
-    public LocalDate getEventDate() {
+    public LocalDateTime getEventDate() {
         return eventDate;
     }
 
-    public void setEventDate(LocalDate eventDate) {
+    public void setEventDate(LocalDateTime eventDate) {
         this.eventDate = eventDate;
     }
 
@@ -51,4 +52,12 @@ public class EventDTO {
     public void setLocation(String location) {
         this.location = location;
     }
+
+    public int getCapacity() {
+    return capacity;
+}
+
+public void setCapacity(int capacity) {
+    this.capacity = capacity;
+}
 }

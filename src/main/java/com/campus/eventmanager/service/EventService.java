@@ -1,5 +1,7 @@
 package com.campus.eventmanager.service;
 
+import com.campus.eventmanager.dto.EventDTO;
+import com.campus.eventmanager.mapper.EventMapper;
 import com.campus.eventmanager.model.Event;
 import com.campus.eventmanager.repository.EventRepository;
 import lombok.RequiredArgsConstructor;
@@ -23,31 +25,46 @@ public class EventService {
 
     private final EventRepository eventRepository;
 
-    public Event createEvent(Event event) {
-        return eventRepository.save(event);
-    }
+    public EventDTO createEvent(EventDTO dto){
 
-    public List<Event> getAllEvents() {
-        return eventRepository.findAll();
-    }
+    Event event = EventMapper.toEntity(dto);
 
-public Event getEventById(Long id) {
-    return eventRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Event not found"));
+    Event saved = eventRepository.save(event);
+
+    return EventMapper.toDTO(saved);
 }
 
-public Event updateEvent(Long id, Event updatedEvent) {
+   public List<EventDTO> getAllEvents(){
+
+    List<Event> events = eventRepository.findAll();
+
+    return events.stream()
+            .map(EventMapper::toDTO)
+            .toList();
+}
+
+public EventDTO getEventById(Long id){
 
     Event event = eventRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Event not found"));
 
-    event.setTitle(updatedEvent.getTitle());
-    event.setDescription(updatedEvent.getDescription());
-    event.setLocation(updatedEvent.getLocation());
-    event.setEventDate(updatedEvent.getEventDate());
-    event.setCapacity(updatedEvent.getCapacity());
+    return EventMapper.toDTO(event);
+}
 
-    return eventRepository.save(event);
+public EventDTO updateEvent(Long id, EventDTO dto){
+
+    Event event = eventRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Event not found"));
+
+    event.setTitle(dto.getTitle());
+    event.setDescription(dto.getDescription());
+    event.setLocation(dto.getLocation());
+    event.setEventDate(dto.getEventDate());
+    event.setCapacity(dto.getCapacity());
+
+    Event updatedEvent = eventRepository.save(event);
+
+    return EventMapper.toDTO(updatedEvent);
 }
 
 public void deleteEvent(Long id) {
