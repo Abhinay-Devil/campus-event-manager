@@ -157,7 +157,7 @@ cd campus-event-manager
 ### 3️⃣ Run Application
 
 ```id="9q2jcv"
-mvn spring-boot:run
+.\mvwn spring-boot:run
 ```
 
 ---
