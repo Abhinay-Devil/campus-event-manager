@@ -5,7 +5,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.campus.eventmanager.repository.UserRepository;
+import com.campus.eventmanager.dto.UserDTO;
 import com.campus.eventmanager.exception.EmailAlreadyExistsException;
+import com.campus.eventmanager.mapper.UserMapper;
 import com.campus.eventmanager.model.User;
 import java.util.List;
 
@@ -19,9 +21,14 @@ public class UserService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
 
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
-    }
+    public List<UserDTO> getAllUsers() {
+
+    List<User> users = userRepository.findAll();
+
+    return users.stream()
+            .map(UserMapper::toDTO)
+            .toList();
+}
 
     public User createUser(User user) {
 

@@ -7,6 +7,8 @@ import com.campus.eventmanager.service.UserService;
 import org.springframework.security.core.Authentication;
 import com.campus.eventmanager.repository.UserRepository;
 import java.util.List;
+
+import com.campus.eventmanager.dto.UserDTO;
 import com.campus.eventmanager.model.Registration;
 import com.campus.eventmanager.repository.RegistrationRepository;
 
@@ -27,7 +29,7 @@ public class UserController {
     }
 
     @GetMapping
-    public List<User> getAllUsers() {
+    public List<UserDTO> getAllUsers() {
         return userService.getAllUsers();
     }
 
