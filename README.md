@@ -1,185 +1,302 @@
-# 🎓 Campus Event Manager
+# 🎓 Campus Event Manager – Backend
 
-![Java](https://img.shields.io/badge/Java-17-orange)
-![Spring Boot](https://img.shields.io/badge/SpringBoot-Backend-brightgreen)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Database-blue)
-![Maven](https://img.shields.io/badge/Maven-Build-red)
-![Status](https://img.shields.io/badge/Project-In%20Development-yellow)
-
-A **Campus Event Management Backend System** built with **Spring Boot and PostgreSQL**.
-This project provides APIs for managing users, events, and registrations in a campus environment.
+A robust backend system for managing campus events, built using **Spring Boot**, **Spring Security**, and **JWT Authentication**.
+This project provides APIs for user authentication, event management, and event registrations with role-based access control.
 
 ---
 
-# 🚀 Features
+# 🚀 Tech Stack
 
-### 👤 User Management
-
-* Create new users
-* Fetch all users
-* Unique email validation
-* Role-based users (ADMIN, STUDENT, FACULTY)
-
-### 🔐 Security
-
-* Password encryption using **BCrypt**
-* Password hidden in API responses
-* Spring Security integration
-
-### ⚠ Error Handling
-
-* Custom exceptions
-* Global exception handling
-* Clean API error responses
-
-### ⏱ Automatic Timestamps
-
-* User creation time stored automatically
-* Hibernate timestamp annotations
-
-### 🗄 Database
-
-* PostgreSQL database
-* ORM using JPA / Hibernate
+* **Java**
+* **Spring Boot**
+* **Spring Security**
+* **JWT Authentication**
+* **Spring Data JPA (Hibernate)**
+* **PostgreSQL**
+* **BCrypt Password Encryption**
+* **Maven**
+* **Postman (API Testing)**
 
 ---
 
-# 🏗 Project Architecture
+# 📂 Project Architecture
 
-```id="xfj3jt"
-Controller
-   ↓
-Service
-   ↓
-Repository
-   ↓
-Database (PostgreSQL)
+The project follows a **layered architecture** for better scalability and maintainability.
+
 ```
-
-The project follows **Layered Architecture**, which is widely used in enterprise applications.
-
----
-
-# 📂 Project Structure
-
-```id="ykg9u3"
 src/main/java/com/campus/eventmanager
 
-├── config          # Security configuration
-├── controller      # REST API controllers
-├── exception       # Custom exceptions & handlers
-├── model           # Entity classes
-├── repository      # Database repositories
-├── service         # Business logic
-└── EventmanagerApplication.java
+config
+ └ SecurityConfig
+
+controller
+ ├ AuthController
+ ├ UserController
+ ├ EventController
+ ├ RegistrationController
+ └ AdminController
+
+dto
+ ├ UserDTO
+ ├ EventDTO
+ └ RegistrationDTO
+
+mapper
+ ├ UserMapper
+ ├ EventMapper
+ └ RegistrationMapper
+
+model
+ ├ User
+ ├ Event
+ ├ Registration
+ └ Role
+
+repository
+ ├ UserRepository
+ ├ EventRepository
+ └ RegistrationRepository
+
+service
+ ├ UserService
+ ├ EventService
+ └ RegistrationService
+
+security
+ ├ JwtFilter
+ ├ JwtUtil
+ └ CustomUserDetailsService
+
+exception
+ └ GlobalExceptionHandler
 ```
+
+---
+
+# 🗄 Database Schema
+
+### Users Table
+
+Stores user information and roles.
+
+| Field    | Type                      |
+| -------- | ------------------------- |
+| id       | Long                      |
+| name     | String                    |
+| email    | String                    |
+| password | String                    |
+| role     | ADMIN / FACULTY / STUDENT |
+
+---
+
+### Events Table
+
+Stores event details.
+
+| Field       | Type     |
+| ----------- | -------- |
+| id          | Long     |
+| title       | String   |
+| description | String   |
+| eventDate   | DateTime |
+| capacity    | Integer  |
+| location    | String   |
+
+---
+
+### Registrations Table
+
+Stores event registration records.
+
+| Field            | Type     |
+| ---------------- | -------- |
+| id               | Long     |
+| user_id          | FK       |
+| event_id         | FK       |
+| registrationDate | DateTime |
+
+---
+
+# 🔗 Entity Relationships
+
+```
+User (1) -------- (Many) Registrations
+
+Event (1) -------- (Many) Registrations
+```
+
+---
+
+# 🔐 Authentication & Authorization
+
+This project uses **JWT-based authentication**.
+
+### Login Flow
+
+1. User logs in with email and password
+2. Spring Security authenticates credentials
+3. JWT token is generated
+4. Token is used to access secured APIs
+
+---
+
+# 👥 User Roles
+
+| Role    | Permissions                         |
+| ------- | ----------------------------------- |
+| ADMIN   | Manage events, users, registrations |
+| FACULTY | Create and manage events            |
+| STUDENT | Register for events                 |
 
 ---
 
 # 📡 API Endpoints
 
-## Create User
+## Authentication
 
-```id="6rtk2o"
-POST /api/users
+### Register User
+
+```
+POST /api/auth/register
 ```
 
-Request Body:
+### Login
 
-```json id="h0qlxy"
-{
-  "name": "Rahul",
-  "email": "rahul@test.com",
-  "password": "1234",
-  "role": "STUDENT"
-}
 ```
-
-Response:
-
-```json id="o39t0c"
-{
-  "id": 1,
-  "name": "Rahul",
-  "email": "rahul@test.com",
-  "role": "STUDENT",
-  "createdAt": "2026-03-05T23:55:10"
-}
+POST /api/auth/login
 ```
 
 ---
 
-## Get All Users
+## Events
 
-```id="f4u9k3"
-GET /api/users
+### Create Event
+
+```
+POST /api/events
 ```
 
-Example Response:
+### Get All Events
 
-```json id="yl5woe"
-[
-  {
-    "id": 1,
-    "name": "Rahul",
-    "email": "rahul@test.com",
-    "role": "STUDENT"
-  }
-]
+```
+GET /api/events
+```
+
+### Get Event By ID
+
+```
+GET /api/events/{id}
+```
+
+### Delete Event
+
+```
+DELETE /api/events/{id}
 ```
 
 ---
 
-# 🗄 Database Example
+## Event Registration
 
-Users Table:
+### Register For Event
 
-| id | name  | email                                   | password  | role    | created_at |
-| -- | ----- | --------------------------------------- | --------- | ------- | ---------- |
-| 1  | Rahul | [rahul@test.com](mailto:rahul@test.com) | encrypted | STUDENT | timestamp  |
-
----
-
-# ⚙ Setup & Run
-
-### 1️⃣ Clone Repository
-
-```id="toocvi"
-git clone https://github.com/yourusername/campus-event-manager.git
+```
+POST /api/events/{eventId}/register
 ```
 
-### 2️⃣ Open Project
+### Cancel Registration
 
-```id="t7n5n9"
-cd campus-event-manager
+```
+DELETE /api/events/{eventId}/register
 ```
 
-### 3️⃣ Run Application
+### Get All Registrations For Event
 
-```id="9q2jcv"
-.\mvwn spring-boot:run
+```
+GET /api/events/{eventId}/registrations
 ```
 
 ---
 
 # 🧪 API Testing
 
-You can test APIs using:
+APIs can be tested using:
 
-* Postman
-* Thunder Client
-* curl
+* **Postman**
+* **cURL**
+* **Swagger (optional future integration)**
+
+Example Request:
+
+```json
+POST /api/auth/register
+
+{
+  "name": "John Doe",
+  "email": "john@example.com",
+  "password": "123456",
+  "role": "STUDENT"
+}
+```
 
 ---
 
-# 🔮 Future Improvements
+# ⚙️ How to Run the Project
+
+### 1️⃣ Clone the Repository
+
+```
+git clone https://github.com/yourusername/campus-event-manager.git
+```
+
+### 2️⃣ Navigate to Project Folder
+
+```
+cd campus-event-manager
+```
+
+### 3️⃣ Build the Project
+
+```
+mvn clean install
+```
+
+### 4️⃣ Run the Application
+
+```
+mvn spring-boot:run
+```
+
+Application will start at:
+
+```
+http://localhost:8080
+```
+
+---
+
+# ✨ Features Implemented
 
 * JWT Authentication
-* Login System
-* Role-based authorization
-* Event creation APIs
-* Event registration system
-* Admin dashboard APIs
+* Role-Based Authorization
+* Event CRUD APIs
+* Event Registration System
+* DTO Architecture
+* Mapper Layer
+* Password Encryption with BCrypt
+* Global Exception Handling
+* Validation using Jakarta Validation
+
+---
+
+# 📈 Future Improvements
+
+* Pagination & Sorting APIs
+* Swagger API Documentation
+* Standard API Response Wrapper
+* Event Search & Filtering
+* Email Notifications
+* Docker Deployment
 
 ---
 
@@ -187,5 +304,14 @@ You can test APIs using:
 
 **Abhinay Srivastava**
 
-Fullstack Developer
-Java | Spring Boot | PostgreSQL
+B.Tech Computer Science Student
+Backend Developer | Java | Spring Boot
+
+GitHub:
+https://github.com/Abhinay-Devil
+
+---
+
+# ⭐ If you like this project
+
+Give it a ⭐ on GitHub and feel free to contribute!
