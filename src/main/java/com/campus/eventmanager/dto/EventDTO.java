@@ -1,15 +1,28 @@
 package com.campus.eventmanager.dto;
-
 import java.time.LocalDateTime;
+import jakarta.validation.constraints.*;
+
+// import jakarta.validation.constraints.NotBlank;
+// import jakarta.validation.constraints.NotNull;
 
 public class EventDTO {
 
-    private Long id;
-    private String title;
-    private String description;
-    private LocalDateTime eventDate;
-    private String location;
-    private int capacity;
+    private Long id;   
+
+   @NotBlank(message = "Event title is required")
+private String title;
+
+@NotBlank(message = "Description is required")
+private String description;
+
+@NotNull(message = "Event date is required")
+private LocalDateTime eventDate;
+
+@NotNull(message = "Capacity is required")
+private Integer capacity;
+
+private String location; 
+
 
     public EventDTO(){}
 
