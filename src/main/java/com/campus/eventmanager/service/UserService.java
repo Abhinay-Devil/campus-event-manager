@@ -10,6 +10,8 @@ import com.campus.eventmanager.exception.EmailAlreadyExistsException;
 import com.campus.eventmanager.mapper.UserMapper;
 import com.campus.eventmanager.model.User;
 import java.util.List;
+// import com.campus.eventmanager.model.Role;
+// import org.springframework.stereotype.Service;
 
 
 // Developed BY Abhinay Srivastava 
@@ -46,5 +48,16 @@ public class UserService {
 public User getUserByEmail(String email) {
     return userRepository.findByEmail(email).orElseThrow();
 }
-    
+
+    public UserDTO register(UserDTO userDTO) {
+
+        User user = UserMapper.toEntity(userDTO);
+
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+        userRepository.save(user);
+
+        return UserMapper.toDTO(user);
+    }
+
 }

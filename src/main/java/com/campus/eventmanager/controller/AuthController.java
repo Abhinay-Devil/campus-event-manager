@@ -2,12 +2,21 @@ package com.campus.eventmanager.controller;
 
 import com.campus.eventmanager.security.CustomUserDetailsService;
 import com.campus.eventmanager.security.JwtUtil;
+import com.campus.eventmanager.service.UserService;
+
+import jakarta.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+
+import com.campus.eventmanager.dto.UserDTO;
 import com.campus.eventmanager.model.AuthRequest;
 // import org.springframework.security.core.userdetails.UserDetails;
+// import com.campus.eventmanager.service.UserService;
+
 
 @RestController
 @RequestMapping("/api/auth")
@@ -36,4 +45,13 @@ public String login(@RequestBody AuthRequest request) {
 
     return jwtUtil.generateToken(userDetails);
 }
+
+@Autowired
+    private UserService userService;
+
+  @PostMapping("/register")
+   public ResponseEntity<UserDTO> register(@Valid @RequestBody UserDTO userDTO) {
+    return ResponseEntity.ok(userService.register(userDTO));
+}
+
 }

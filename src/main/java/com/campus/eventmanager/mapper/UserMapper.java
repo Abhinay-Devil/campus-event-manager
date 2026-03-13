@@ -1,6 +1,7 @@
 package com.campus.eventmanager.mapper;
 
 import com.campus.eventmanager.dto.UserDTO;
+import com.campus.eventmanager.model.Role;
 import com.campus.eventmanager.model.User;
 
 public class UserMapper {
@@ -17,4 +18,16 @@ public class UserMapper {
         return dto;
     }
 
+    public static User toEntity(UserDTO dto) {
+
+        User user = new User();
+
+        user.setId(dto.getId());
+        user.setName(dto.getName());
+        user.setEmail(dto.getEmail());
+        user.setPassword(dto.getPassword());
+        user.setRole(Role.valueOf(dto.getRole()));
+
+        return user;
+    }
 }

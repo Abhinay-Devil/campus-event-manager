@@ -2,6 +2,7 @@ package com.campus.eventmanager.dto;
 
 import lombok.Data;
 import jakarta.validation.constraints.*;
+import com.campus.eventmanager.dto.UserDTO;
 
 @Data
 public class UserDTO {

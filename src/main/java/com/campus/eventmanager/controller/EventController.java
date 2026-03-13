@@ -2,8 +2,12 @@ package com.campus.eventmanager.controller;
 
 // import com.campus.eventmanager.model.Event;
 import com.campus.eventmanager.service.EventService;
+
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import com.campus.eventmanager.dto.EventDTO;
+
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,10 +20,10 @@ public class EventController {
 
     private final EventService eventService;
 
- @PostMapping
+    @PostMapping
 @PreAuthorize("hasAnyRole('ADMIN','FACULTY')")
-public EventDTO createEvent(@RequestBody EventDTO eventDTO){
-    return eventService.createEvent(eventDTO);
+public ResponseEntity<EventDTO> createEvent(@Valid @RequestBody EventDTO eventDTO) {
+    return ResponseEntity.ok(eventService.createEvent(eventDTO));
 }
 
 @DeleteMapping("/{id}")
