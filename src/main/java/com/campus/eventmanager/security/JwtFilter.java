@@ -10,7 +10,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-
+import org.springframework.lang.NonNull;
 import java.io.IOException;
 
 @Component
@@ -23,22 +23,23 @@ public class JwtFilter extends OncePerRequestFilter {
     private CustomUserDetailsService userDetailsService;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request,
-                                    HttpServletResponse response,
-                                    FilterChain filterChain)
-            throws ServletException, IOException {
+protected void doFilterInternal(
+        @NonNull HttpServletRequest request,
+        @NonNull HttpServletResponse response,
+        @NonNull FilterChain filterChain)
+        throws ServletException, IOException {
 
-        String path = request.getServletPath();
+    String path = request.getServletPath();
 
-        // 🔹 Swagger endpoints bypass
-        if (path.startsWith("/swagger-ui")
-                || path.startsWith("/v3/api-docs")
-                || path.startsWith("/swagger-resources")
-                || path.startsWith("/webjars")) {
+    // Swagger endpoints bypass
+    if (path.startsWith("/swagger-ui")
+            || path.startsWith("/v3/api-docs")
+            || path.startsWith("/swagger-resources")
+            || path.startsWith("/webjars")) {
 
-            filterChain.doFilter(request, response);
-            return;
-        }
+        filterChain.doFilter(request, response);
+        return;
+    }
 
         String authHeader = request.getHeader("Authorization");
 

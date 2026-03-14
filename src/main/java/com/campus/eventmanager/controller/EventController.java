@@ -47,9 +47,10 @@ public EventDTO getEventById(@PathVariable Long id){
 public Page<EventDTO> getAllEvents(
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "5") int size,
-        @RequestParam(defaultValue = "id") String sortBy
-) {
-    return eventService.getAllEvents(page, size, sortBy);
+        @RequestParam(defaultValue = "id") String sortBy,
+        @RequestParam(defaultValue = "asc") String direction
+){
+    return eventService.getAllEvents(page, size, sortBy, direction);
 }
 
 @PutMapping("/{id}")

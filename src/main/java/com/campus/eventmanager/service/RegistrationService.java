@@ -7,14 +7,16 @@ import com.campus.eventmanager.model.User;
 import com.campus.eventmanager.repository.EventRepository;
 import com.campus.eventmanager.repository.RegistrationRepository;
 import com.campus.eventmanager.repository.UserRepository;
+import com.campus.eventmanager.mapper.RegistrationMapper;
+
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.stereotype.Service;
+import org.springframework.lang.NonNull;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import java.time.LocalDateTime;
 
-import com.campus.eventmanager.mapper.RegistrationMapper;
+import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -24,7 +26,8 @@ public class RegistrationService {
     private final UserRepository userRepository;
     private final EventRepository eventRepository;
 
-    public RegistrationDTO register(Long eventId) {
+    // Register for event
+    public RegistrationDTO register(@NonNull Long eventId) {
 
         Authentication authentication =
                 SecurityContextHolder.getContext().getAuthentication();
@@ -59,16 +62,16 @@ public class RegistrationService {
 
         Registration saved = registrationRepository.save(registration);
 
-return RegistrationMapper.toDTO(saved);
+        return RegistrationMapper.toDTO(saved);
     }
 
-public void cancelRegistration(Long eventId, Long userId) {
+    // Cancel registration
+    public void cancelRegistration(@NonNull Long eventId, @NonNull Long userId) {
 
-    Registration registration = registrationRepository
-            .findByUserIdAndEventId(userId, eventId)
-            .orElseThrow(() -> new RuntimeException("Registration not found"));
+        Registration registration = registrationRepository
+                .findByUser_IdAndEvent_Id(userId, eventId)
+                .orElseThrow(() -> new RuntimeException("Registration not found"));
 
-    registrationRepository.delete(registration);
-}
-
+        registrationRepository.delete(registration);
+    }
 }

@@ -4,89 +4,88 @@ import com.campus.eventmanager.dto.EventDTO;
 import com.campus.eventmanager.mapper.EventMapper;
 import com.campus.eventmanager.model.Event;
 import com.campus.eventmanager.repository.EventRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 
-// import org.springframework.web.bind.annotation.PathVariable;
-// import org.springframework.web.bind.annotation.PutMapping;
-// import org.springframework.web.bind.annotation.RequestBody;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.stereotype.Service;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 
-
-import java.util.List;
-
-// import org.springframework.data.domain.Page;
-// import org.springframework.data.domain.Pageable;
-// import org.springframework.data.domain.PageRequest;
-// import org.springframework.data.domain.Sort;
-// Developed BY Abhinay Srivastava 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class EventService {
 
     private final EventRepository eventRepository;
 
-    public EventDTO createEvent(EventDTO dto){
+    // Create Event
+    public EventDTO createEvent(EventDTO dto) {
 
-    Event event = EventMapper.toEntity(dto);
+        log.info("Creating event: {}", dto.getTitle());
 
-    Event saved = eventRepository.save(event);
+        Event event = EventMapper.toEntity(dto);
+        Event savedEvent = eventRepository.save(event);
 
-    return EventMapper.toDTO(saved);
-}
+        return EventMapper.toDTO(savedEvent);
+    }
 
-   public List<EventDTO> getAllEvents(){
+    // Get Event by ID
+    public EventDTO getEventById(Long id) {
 
-    List<Event> events = eventRepository.findAll();
+        Event event = eventRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Event not found"));
 
-    return events.stream()
-            .map(EventMapper::toDTO)
-            .toList();
-}
+        return EventMapper.toDTO(event);
+    }
 
-public EventDTO getEventById(Long id){
+    // Update Event
+    public EventDTO updateEvent(Long id, EventDTO dto) {
 
-    Event event = eventRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Event not found"));
+        log.info("Updating event with id: {}", id);
 
-    return EventMapper.toDTO(event);
-}
+        Event event = eventRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Event not found"));
 
-public EventDTO updateEvent(Long id, EventDTO dto){
+        event.setTitle(dto.getTitle());
+        event.setDescription(dto.getDescription());
+        event.setLocation(dto.getLocation());
+        event.setEventDate(dto.getEventDate());
+        event.setCapacity(dto.getCapacity());
 
-    Event event = eventRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Event not found"));
+        Event updatedEvent = eventRepository.save(event);
 
-    event.setTitle(dto.getTitle());
-    event.setDescription(dto.getDescription());
-    event.setLocation(dto.getLocation());
-    event.setEventDate(dto.getEventDate());
-    event.setCapacity(dto.getCapacity());
+        return EventMapper.toDTO(updatedEvent);
+    }
 
-    Event updatedEvent = eventRepository.save(event);
+    // Delete Event
+    public void deleteEvent(Long id) {
 
-    return EventMapper.toDTO(updatedEvent);
-}
+        log.info("Deleting event with id: {}", id);
 
-public void deleteEvent(Long id) {
+        Event event = eventRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Event not found"));
 
-    Event event = eventRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Event not found"));
+        eventRepository.delete(event);
+    }
 
-    eventRepository.delete(event);
-}
+    // Get All Events with Pagination + Sorting
+    public Page<EventDTO> getAllEvents(int page, int size, String sortBy, String direction) {
 
-public Page<EventDTO> getAllEvents(int page, int size, String sortBy) {
+        log.info("Fetching events page={}, size={}, sortBy={}, direction={}",
+                page, size, sortBy, direction);
 
-    Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
+        Sort sort = "desc".equalsIgnoreCase(direction)
+                ? Sort.by(sortBy).descending()
+                : Sort.by(sortBy).ascending();
 
-    Page<Event> events = eventRepository.findAll(pageable);
+        Pageable pageable = PageRequest.of(page, size, sort);
 
-    return events.map(EventMapper::toDTO);
-}
+        Page<Event> eventsPage = eventRepository.findAll(pageable);
 
+        return eventsPage.map(EventMapper::toDTO);
+    }
 }

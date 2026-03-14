@@ -54,7 +54,7 @@ public List<Registration> getMyRegistrations(Authentication authentication) {
     User user = userRepository.findByEmail(email)
             .orElseThrow(() -> new RuntimeException("User not found"));
 
-    return registrationRepository.findByUserId(user.getId());
+    return registrationRepository.findByUser_Id(user.getId());
 }
 
 }
