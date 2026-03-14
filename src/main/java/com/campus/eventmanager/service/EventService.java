@@ -18,6 +18,11 @@ import org.springframework.data.domain.Sort;
 
 
 import java.util.List;
+
+// import org.springframework.data.domain.Page;
+// import org.springframework.data.domain.Pageable;
+// import org.springframework.data.domain.PageRequest;
+// import org.springframework.data.domain.Sort;
 // Developed BY Abhinay Srivastava 
 @Service
 @RequiredArgsConstructor
@@ -75,11 +80,13 @@ public void deleteEvent(Long id) {
     eventRepository.delete(event);
 }
 
-public Page<Event> getEvents(int page, int size, String sortBy) {
+public Page<EventDTO> getAllEvents(int page, int size, String sortBy) {
 
     Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
 
-    return eventRepository.findAll(pageable);
+    Page<Event> events = eventRepository.findAll(pageable);
+
+    return events.map(EventMapper::toDTO);
 }
 
 }

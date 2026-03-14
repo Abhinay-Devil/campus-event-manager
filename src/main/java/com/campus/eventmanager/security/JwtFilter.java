@@ -2,7 +2,8 @@ package com.campus.eventmanager.security;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.*;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -27,6 +28,18 @@ public class JwtFilter extends OncePerRequestFilter {
                                     FilterChain filterChain)
             throws ServletException, IOException {
 
+        String path = request.getServletPath();
+
+        // 🔹 Swagger endpoints bypass
+        if (path.startsWith("/swagger-ui")
+                || path.startsWith("/v3/api-docs")
+                || path.startsWith("/swagger-resources")
+                || path.startsWith("/webjars")) {
+
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         String authHeader = request.getHeader("Authorization");
 
         String token = null;
@@ -34,7 +47,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             token = authHeader.substring(7);
-           email = jwtUtil.extractUsername(token);
+            email = jwtUtil.extractUsername(token);
         }
 
         if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
@@ -60,7 +73,4 @@ public class JwtFilter extends OncePerRequestFilter {
 
         filterChain.doFilter(request, response);
     }
-
-
-    
 }

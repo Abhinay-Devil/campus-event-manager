@@ -1,28 +1,27 @@
 package com.campus.eventmanager.dto;
+
 import java.time.LocalDateTime;
 import jakarta.validation.constraints.*;
 
-// import jakarta.validation.constraints.NotBlank;
-// import jakarta.validation.constraints.NotNull;
-
 public class EventDTO {
 
-    private Long id;   
+    private Long id;
 
-   @NotBlank(message = "Event title is required")
-private String title;
+    @NotBlank(message = "Event title is required")
+    private String title;
 
-@NotBlank(message = "Description is required")
-private String description;
+    @NotBlank(message = "Description is required")
+    private String description;
 
-@NotNull(message = "Event date is required")
-private LocalDateTime eventDate;
+    @NotNull(message = "Event date is required")
+    private LocalDateTime eventDate;
 
-@NotNull(message = "Capacity is required")
-private Integer capacity;
+    @NotNull(message = "Capacity is required")
+    private Integer capacity;
 
-private String location; 
+    private String location;
 
+    private Boolean registrationOpen;   // ⭐ ADD THIS
 
     public EventDTO(){}
 
@@ -58,6 +57,14 @@ private String location;
         this.eventDate = eventDate;
     }
 
+    public Integer getCapacity() {   // ⭐ FIXED
+        return capacity;
+    }
+
+    public void setCapacity(Integer capacity) {   // ⭐ FIXED
+        this.capacity = capacity;
+    }
+
     public String getLocation() {
         return location;
     }
@@ -66,11 +73,11 @@ private String location;
         this.location = location;
     }
 
-    public int getCapacity() {
-    return capacity;
-}
+    public Boolean getRegistrationOpen() {   // ⭐ ADD
+        return registrationOpen;
+    }
 
-public void setCapacity(int capacity) {
-    this.capacity = capacity;
-}
+    public void setRegistrationOpen(Boolean registrationOpen) {   // ⭐ ADD
+        this.registrationOpen = registrationOpen;
+    }
 }

@@ -11,7 +11,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import org.springframework.data.domain.Page;
+// import org.springframework.data.domain.Pageable;
+// import org.springframework.data.domain.PageRequest;
+// import org.springframework.data.domain.Sort;
+
+// import java.util.List;
 // Develpoed BY Abhinay Srivastava 
 @RestController
 @RequestMapping("/api/events")
@@ -39,8 +44,12 @@ public EventDTO getEventById(@PathVariable Long id){
 }
 
     @GetMapping
-public List<EventDTO> getAllEvents(){
-    return eventService.getAllEvents();
+public Page<EventDTO> getAllEvents(
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "5") int size,
+        @RequestParam(defaultValue = "id") String sortBy
+) {
+    return eventService.getAllEvents(page, size, sortBy);
 }
 
 @PutMapping("/{id}")

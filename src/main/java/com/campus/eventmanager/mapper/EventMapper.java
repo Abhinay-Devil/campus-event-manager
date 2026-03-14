@@ -7,27 +7,29 @@ public class EventMapper {
 
     public static EventDTO toDTO(Event event) {
 
-        EventDTO dto = new EventDTO();
+    EventDTO dto = new EventDTO();
 
-        dto.setId(event.getId());
-        dto.setTitle(event.getTitle());
-        dto.setDescription(event.getDescription());
-        dto.setEventDate(event.getEventDate());
-        dto.setLocation(event.getLocation());
-
-        return dto;
-    }
-
+    dto.setId(event.getId());
+    dto.setTitle(event.getTitle());
+    dto.setDescription(event.getDescription());
+    dto.setEventDate(event.getEventDate());
+    dto.setLocation(event.getLocation());
+    dto.setCapacity(event.getCapacity());
+    dto.setRegistrationOpen(event.isRegistrationOpen());
+    return dto;
+}
     public static Event toEntity(EventDTO dto) {
 
-        Event event = new Event();
+    Event event = new Event();
 
-        event.setId(dto.getId());
-        event.setTitle(dto.getTitle());
-        event.setDescription(dto.getDescription());
-        event.setEventDate(dto.getEventDate());
-        event.setLocation(dto.getLocation());
+    event.setId(dto.getId());
+    event.setTitle(dto.getTitle());
+    event.setDescription(dto.getDescription());
+    event.setEventDate(dto.getEventDate());
+    event.setLocation(dto.getLocation());
+    event.setCapacity(dto.getCapacity());
+    event.setRegistrationOpen(dto.getRegistrationOpen());
 
-        return event;
-    }
+    return event;
+}
 }
