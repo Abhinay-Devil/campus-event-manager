@@ -2,18 +2,14 @@ package com.campus.eventmanager.mapper;
 
 import com.campus.eventmanager.dto.RegistrationDTO;
 import com.campus.eventmanager.model.Registration;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
-public class RegistrationMapper {
+@Mapper(componentModel = "spring")
+public interface RegistrationMapper {
 
-    public static RegistrationDTO toDTO(Registration registration) {
-
-        RegistrationDTO dto = new RegistrationDTO();
-
-        dto.setId(registration.getId());
-        dto.setUserId(registration.getUser().getId());
-        dto.setEventId(registration.getEvent().getId());
-
-        return dto;
-    }
+    @Mapping(target = "userId", source = "user.id")
+    @Mapping(target = "eventId", source = "event.id")
+    RegistrationDTO toDTO(Registration registration);
 
 }

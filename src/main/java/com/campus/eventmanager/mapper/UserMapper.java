@@ -3,31 +3,16 @@ package com.campus.eventmanager.mapper;
 import com.campus.eventmanager.dto.UserDTO;
 import com.campus.eventmanager.model.Role;
 import com.campus.eventmanager.model.User;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
-public class UserMapper {
+@Mapper(componentModel = "spring", imports = Role.class)
+public interface UserMapper {
 
-    public static UserDTO toDTO(User user) {
+    @Mapping(target = "role", expression = "java(user.getRole().name())")
+    UserDTO toDTO(User user);
 
-        UserDTO dto = new UserDTO();
+    @Mapping(target = "role", expression = "java(Role.valueOf(dto.getRole()))")
+    User toEntity(UserDTO dto);
 
-        dto.setId(user.getId());
-        dto.setName(user.getName());
-        dto.setEmail(user.getEmail());
-        dto.setRole(user.getRole().name());
-
-        return dto;
-    }
-
-    public static User toEntity(UserDTO dto) {
-
-        User user = new User();
-
-        user.setId(dto.getId());
-        user.setName(dto.getName());
-        user.setEmail(dto.getEmail());
-        user.setPassword(dto.getPassword());
-        user.setRole(Role.valueOf(dto.getRole()));
-
-        return user;
-    }
 }

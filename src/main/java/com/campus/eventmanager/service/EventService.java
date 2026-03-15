@@ -5,32 +5,37 @@ import com.campus.eventmanager.mapper.EventMapper;
 import com.campus.eventmanager.model.Event;
 import com.campus.eventmanager.repository.EventRepository;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.stereotype.Service;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Pageable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Service
-@RequiredArgsConstructor
-@Slf4j
 public class EventService {
 
+    private static final Logger log = LoggerFactory.getLogger(EventService.class);
+
     private final EventRepository eventRepository;
+    private final EventMapper eventMapper;
+
+    public EventService(EventRepository eventRepository, EventMapper eventMapper) {
+        this.eventRepository = eventRepository;
+        this.eventMapper = eventMapper;
+    }
 
     // Create Event
     public EventDTO createEvent(EventDTO dto) {
 
         log.info("Creating event: {}", dto.getTitle());
 
-        Event event = EventMapper.toEntity(dto);
+        Event event = eventMapper.toEntity(dto);
         Event savedEvent = eventRepository.save(event);
 
-        return EventMapper.toDTO(savedEvent);
+        return eventMapper.toDTO(savedEvent);
     }
 
     // Get Event by ID
@@ -39,7 +44,7 @@ public class EventService {
         Event event = eventRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Event not found"));
 
-        return EventMapper.toDTO(event);
+        return eventMapper.toDTO(event);
     }
 
     // Update Event
@@ -58,7 +63,7 @@ public class EventService {
 
         Event updatedEvent = eventRepository.save(event);
 
-        return EventMapper.toDTO(updatedEvent);
+        return eventMapper.toDTO(updatedEvent);
     }
 
     // Delete Event
@@ -86,6 +91,6 @@ public class EventService {
 
         Page<Event> eventsPage = eventRepository.findAll(pageable);
 
-        return eventsPage.map(EventMapper::toDTO);
+        return eventsPage.map(eventMapper::toDTO);
     }
 }

@@ -1,7 +1,5 @@
 package com.campus.eventmanager.service;
 
-import lombok.RequiredArgsConstructor;
-
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.campus.eventmanager.repository.UserRepository;
@@ -17,18 +15,24 @@ import java.util.List;
 // Developed BY Abhinay Srivastava 
 
 @Service
-@RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final UserMapper userMapper;
+
+    public UserService(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder, UserMapper userMapper) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.userMapper = userMapper;
+    }
 
     public List<UserDTO> getAllUsers() {
 
     List<User> users = userRepository.findAll();
 
     return users.stream()
-            .map(UserMapper::toDTO)
+            .map(userMapper::toDTO)
             .toList();
 }
 
@@ -51,13 +55,13 @@ public User getUserByEmail(String email) {
 
     public UserDTO register(UserDTO userDTO) {
 
-        User user = UserMapper.toEntity(userDTO);
+        User user = userMapper.toEntity(userDTO);
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         userRepository.save(user);
 
-        return UserMapper.toDTO(user);
+        return userMapper.toDTO(user);
     }
 
 }

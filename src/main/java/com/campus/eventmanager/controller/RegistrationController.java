@@ -3,7 +3,6 @@ package com.campus.eventmanager.controller;
 import com.campus.eventmanager.dto.RegistrationDTO;
 // import com.campus.eventmanager.model.Registration;
 import com.campus.eventmanager.service.RegistrationService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.http.ResponseEntity;
@@ -17,11 +16,15 @@ import com.campus.eventmanager.repository.UserRepository;
 
 @RestController
 @RequestMapping("/api/events")
-@RequiredArgsConstructor
 public class RegistrationController {
 
     private final RegistrationService registrationService;
     private final UserRepository userRepository;
+
+    public RegistrationController(RegistrationService registrationService, UserRepository userRepository) {
+        this.registrationService = registrationService;
+        this.userRepository = userRepository;
+    }
 
 
     @DeleteMapping("/{eventId}/cancel")

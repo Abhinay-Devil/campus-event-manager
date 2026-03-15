@@ -2,34 +2,13 @@ package com.campus.eventmanager.mapper;
 
 import com.campus.eventmanager.dto.EventDTO;
 import com.campus.eventmanager.model.Event;
+import org.mapstruct.Mapper;
 
-public class EventMapper {
+@Mapper(componentModel = "spring")
+public interface EventMapper {
 
-    public static EventDTO toDTO(Event event) {
+    EventDTO toDTO(Event event);
 
-    EventDTO dto = new EventDTO();
+    Event toEntity(EventDTO dto);
 
-    dto.setId(event.getId());
-    dto.setTitle(event.getTitle());
-    dto.setDescription(event.getDescription());
-    dto.setEventDate(event.getEventDate());
-    dto.setLocation(event.getLocation());
-    dto.setCapacity(event.getCapacity());
-    dto.setRegistrationOpen(event.isRegistrationOpen());
-    return dto;
-}
-    public static Event toEntity(EventDTO dto) {
-
-    Event event = new Event();
-
-    event.setId(dto.getId());
-    event.setTitle(dto.getTitle());
-    event.setDescription(dto.getDescription());
-    event.setEventDate(dto.getEventDate());
-    event.setLocation(dto.getLocation());
-    event.setCapacity(dto.getCapacity());
-    event.setRegistrationOpen(dto.getRegistrationOpen());
-
-    return event;
-}
 }

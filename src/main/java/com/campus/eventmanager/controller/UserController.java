@@ -1,6 +1,5 @@
 package com.campus.eventmanager.controller;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import com.campus.eventmanager.model.User;
 import com.campus.eventmanager.service.UserService;
@@ -16,12 +15,17 @@ import com.campus.eventmanager.repository.RegistrationRepository;
 
 @RestController
 @RequestMapping("/api/users")
-@RequiredArgsConstructor
 public class UserController {
 
     private final UserService userService;
     private final UserRepository userRepository;
     private final RegistrationRepository registrationRepository;
+
+    public UserController(UserService userService, UserRepository userRepository, RegistrationRepository registrationRepository) {
+        this.userService = userService;
+        this.userRepository = userRepository;
+        this.registrationRepository = registrationRepository;
+    }
 
     @PostMapping
     public User createUser(@RequestBody User user) {

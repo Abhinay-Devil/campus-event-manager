@@ -4,7 +4,6 @@ package com.campus.eventmanager.controller;
 import com.campus.eventmanager.service.EventService;
 
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import com.campus.eventmanager.dto.EventDTO;
 
 import org.springframework.http.ResponseEntity;
@@ -20,10 +19,13 @@ import org.springframework.data.domain.Page;
 // Develpoed BY Abhinay Srivastava 
 @RestController
 @RequestMapping("/api/events")
-@RequiredArgsConstructor
 public class EventController {
 
     private final EventService eventService;
+
+    public EventController(EventService eventService) {
+        this.eventService = eventService;
+    }
 
     @PostMapping
 @PreAuthorize("hasAnyRole('ADMIN','FACULTY')")
