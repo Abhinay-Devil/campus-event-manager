@@ -70,6 +70,7 @@ public class RegistrationService {
     }
 
     // Cancel registration
+    @SuppressWarnings("null")
     public void cancelRegistration(@NonNull Long eventId, @NonNull Long userId) {
 
         Registration registration = registrationRepository

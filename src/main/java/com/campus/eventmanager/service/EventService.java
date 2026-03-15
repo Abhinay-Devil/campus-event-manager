@@ -5,8 +5,9 @@ import com.campus.eventmanager.mapper.EventMapper;
 import com.campus.eventmanager.model.Event;
 import com.campus.eventmanager.repository.EventRepository;
 
-import org.springframework.stereotype.Service;
+import org.springframework.lang.NonNull;
 
+import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -28,7 +29,8 @@ public class EventService {
     }
 
     // Create Event
-    public EventDTO createEvent(EventDTO dto) {
+    @SuppressWarnings("null")
+    public EventDTO createEvent(@NonNull EventDTO dto) {
 
         log.info("Creating event: {}", dto.getTitle());
 
@@ -39,7 +41,7 @@ public class EventService {
     }
 
     // Get Event by ID
-    public EventDTO getEventById(Long id) {
+    public EventDTO getEventById(@NonNull Long id) {
 
         Event event = eventRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Event not found"));
@@ -48,7 +50,8 @@ public class EventService {
     }
 
     // Update Event
-    public EventDTO updateEvent(Long id, EventDTO dto) {
+    @SuppressWarnings("null")
+    public EventDTO updateEvent(@NonNull Long id, @NonNull EventDTO dto) {
 
         log.info("Updating event with id: {}", id);
 
@@ -67,7 +70,8 @@ public class EventService {
     }
 
     // Delete Event
-    public void deleteEvent(Long id) {
+    @SuppressWarnings("null")
+    public void deleteEvent(@NonNull Long id) {
 
         log.info("Deleting event with id: {}", id);
 

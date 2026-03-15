@@ -2,17 +2,16 @@ package com.campus.eventmanager.controller;
 
 import com.campus.eventmanager.dto.RegistrationDTO;
 // import com.campus.eventmanager.model.Registration;
+import com.campus.eventmanager.model.User;
 import com.campus.eventmanager.service.RegistrationService;
+import org.springframework.lang.NonNull;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.http.ResponseEntity;
 // import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import com.campus.eventmanager.model.User;
-// import org.springframework.security.core.Authentication;
-// import org.springframework.security.core.userdetails.UserDetails;
 import com.campus.eventmanager.repository.UserRepository;
-
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/events")
@@ -29,7 +28,7 @@ public class RegistrationController {
 
     @DeleteMapping("/{eventId}/cancel")
 public ResponseEntity<String> cancelRegistration(
-        @PathVariable Long eventId,
+        @PathVariable @NonNull Long eventId,
         Authentication authentication) {
 
     UserDetails userDetails = (UserDetails) authentication.getPrincipal();
@@ -39,7 +38,7 @@ public ResponseEntity<String> cancelRegistration(
     User user = userRepository.findByEmail(email)
             .orElseThrow(() -> new RuntimeException("User not found"));
 
-    registrationService.cancelRegistration(eventId, user.getId());
+    registrationService.cancelRegistration(eventId, Objects.requireNonNull(user.getId()));
 
     return ResponseEntity.ok("Registration cancelled successfully");
 }
@@ -47,7 +46,7 @@ public ResponseEntity<String> cancelRegistration(
 
     @PostMapping("/{eventId}/register")
    // @PreAuthorize("hasRole('STUDENT')")
-    public RegistrationDTO register(@PathVariable Long eventId){
+    public RegistrationDTO register(@PathVariable @NonNull Long eventId){
     return registrationService.register(eventId);
 }
 
