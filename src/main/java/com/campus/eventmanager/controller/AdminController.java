@@ -1,10 +1,12 @@
 package com.campus.eventmanager.controller;
 
 import com.campus.eventmanager.repository.UserRepository;
+import com.campus.eventmanager.response.ApiResponse;
 import com.campus.eventmanager.repository.EventRepository;
 import com.campus.eventmanager.repository.RegistrationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,7 +25,7 @@ public class AdminController {
     private RegistrationRepository registrationRepository;
 
     @GetMapping("/stats")
-    public Map<String, Long> getStats() {
+    public ResponseEntity<ApiResponse<Map<String, Long>>> getStats() {
 
         Map<String, Long> stats = new HashMap<>();
 
@@ -31,6 +33,6 @@ public class AdminController {
         stats.put("events", eventRepository.count());
         stats.put("registrations", registrationRepository.count());
 
-        return stats;
+        return ResponseEntity.ok(ApiResponse.success("Statistics retrieved successfully", stats));
     }
 }

@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 // import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import com.campus.eventmanager.repository.UserRepository;
+import com.campus.eventmanager.response.ApiResponse;
+
 import java.util.Objects;
 
 @RestController
@@ -27,7 +29,7 @@ public class RegistrationController {
 
 
     @DeleteMapping("/{eventId}/cancel")
-public ResponseEntity<String> cancelRegistration(
+public ResponseEntity<ApiResponse<Void>> cancelRegistration(
         @PathVariable @NonNull Long eventId,
         Authentication authentication) {
 
@@ -40,14 +42,15 @@ public ResponseEntity<String> cancelRegistration(
 
     registrationService.cancelRegistration(eventId, Objects.requireNonNull(user.getId()));
 
-    return ResponseEntity.ok("Registration cancelled successfully");
+    return ResponseEntity.ok(ApiResponse.success("Registration cancelled successfully", null));
 }
 
 
     @PostMapping("/{eventId}/register")
    // @PreAuthorize("hasRole('STUDENT')")
-    public RegistrationDTO register(@PathVariable @NonNull Long eventId){
-    return registrationService.register(eventId);
+    public ResponseEntity<ApiResponse<RegistrationDTO>> register(@PathVariable @NonNull Long eventId){
+    RegistrationDTO registration = registrationService.register(eventId);
+    return ResponseEntity.ok(ApiResponse.success("Registration successful", registration));
 }
 
 

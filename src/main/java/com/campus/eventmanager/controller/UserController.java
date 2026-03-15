@@ -5,13 +5,16 @@ import com.campus.eventmanager.model.User;
 import com.campus.eventmanager.service.UserService;
 import org.springframework.security.core.Authentication;
 import com.campus.eventmanager.repository.UserRepository;
+import com.campus.eventmanager.response.ApiResponse;
+
 import java.util.List;
 
 import com.campus.eventmanager.dto.UserDTO;
 import com.campus.eventmanager.model.Registration;
 import com.campus.eventmanager.repository.RegistrationRepository;
+import org.springframework.http.ResponseEntity;
 
-// Developed BY Abhinay Srivastava 
+// Developed BY Abhinay Srivastava
 
 @RestController
 @RequestMapping("/api/users")
@@ -28,17 +31,19 @@ public class UserController {
     }
 
     @PostMapping
-    public User createUser(@RequestBody User user) {
-        return userService.createUser(user);
+    public ResponseEntity<ApiResponse<User>> createUser(@RequestBody User user) {
+        User createdUser = userService.createUser(user);
+        return ResponseEntity.ok(ApiResponse.success("User created successfully", createdUser));
     }
 
     @GetMapping
-    public List<UserDTO> getAllUsers() {
-        return userService.getAllUsers();
+    public ResponseEntity<ApiResponse<List<UserDTO>>> getAllUsers() {
+        List<UserDTO> users = userService.getAllUsers();
+        return ResponseEntity.ok(ApiResponse.success("Users retrieved successfully", users));
     }
 
     @GetMapping("/me")
-    public User getMyProfile(Authentication authentication) {
+    public ResponseEntity<ApiResponse<User>> getMyProfile(Authentication authentication) {
 
         if(authentication == null){
             throw new RuntimeException("User not authenticated");
@@ -46,19 +51,22 @@ public class UserController {
 
         String email = authentication.getName();
 
-        return userRepository.findByEmail(email)
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
+
+        return ResponseEntity.ok(ApiResponse.success("Profile retrieved successfully", user));
     }
 
 @GetMapping("/me/registrations")
-public List<Registration> getMyRegistrations(Authentication authentication) {
+public ResponseEntity<ApiResponse<List<Registration>>> getMyRegistrations(Authentication authentication) {
 
     String email = authentication.getName();
 
     User user = userRepository.findByEmail(email)
             .orElseThrow(() -> new RuntimeException("User not found"));
 
-    return registrationRepository.findByUser_Id(user.getId());
+    List<Registration> registrations = registrationRepository.findByUser_Id(user.getId());
+    return ResponseEntity.ok(ApiResponse.success("Registrations retrieved successfully", registrations));
 }
 
 }

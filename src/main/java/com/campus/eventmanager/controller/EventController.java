@@ -5,6 +5,7 @@ import com.campus.eventmanager.service.EventService;
 
 import jakarta.validation.Valid;
 import com.campus.eventmanager.dto.EventDTO;
+import com.campus.eventmanager.response.ApiResponse;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -30,35 +31,39 @@ public class EventController {
 
     @PostMapping
 @PreAuthorize("hasAnyRole('ADMIN','FACULTY')")
-public ResponseEntity<EventDTO> createEvent(@Valid @RequestBody @NonNull EventDTO eventDTO) {
-    return ResponseEntity.ok(eventService.createEvent(eventDTO));
+public ResponseEntity<ApiResponse<EventDTO>> createEvent(@Valid @RequestBody @NonNull EventDTO eventDTO) {
+    EventDTO createdEvent = eventService.createEvent(eventDTO);
+    return ResponseEntity.ok(ApiResponse.success("Event created successfully", createdEvent));
 }
 
 @DeleteMapping("/{id}")
 @PreAuthorize("hasRole('ADMIN')")
-public String deleteEvent(@PathVariable @NonNull Long id) {
+public ResponseEntity<ApiResponse<Void>> deleteEvent(@PathVariable @NonNull Long id) {
     eventService.deleteEvent(id);
-    return "Event deleted successfully";
+    return ResponseEntity.ok(ApiResponse.success("Event deleted successfully", null));
 }
 
 @GetMapping("/{id}")
-public EventDTO getEventById(@PathVariable @NonNull Long id){
-    return eventService.getEventById(id);
+public ResponseEntity<ApiResponse<EventDTO>> getEventById(@PathVariable @NonNull Long id){
+    EventDTO event = eventService.getEventById(id);
+    return ResponseEntity.ok(ApiResponse.success("Event retrieved successfully", event));
 }
 
     @GetMapping
-public Page<EventDTO> getAllEvents(
+public ResponseEntity<ApiResponse<Page<EventDTO>>> getAllEvents(
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "5") int size,
         @RequestParam(defaultValue = "id") String sortBy,
         @RequestParam(defaultValue = "asc") String direction
 ){
-    return eventService.getAllEvents(page, size, sortBy, direction);
+    Page<EventDTO> events = eventService.getAllEvents(page, size, sortBy, direction);
+    return ResponseEntity.ok(ApiResponse.success("Events retrieved successfully", events));
 }
 
 @PutMapping("/{id}")
-public EventDTO updateEvent(@PathVariable @NonNull Long id, @RequestBody @NonNull EventDTO eventDTO){
-    return eventService.updateEvent(id,eventDTO);
+public ResponseEntity<ApiResponse<EventDTO>> updateEvent(@PathVariable @NonNull Long id, @RequestBody @NonNull EventDTO eventDTO){
+    EventDTO updatedEvent = eventService.updateEvent(id,eventDTO);
+    return ResponseEntity.ok(ApiResponse.success("Event updated successfully", updatedEvent));
 }
 
 }

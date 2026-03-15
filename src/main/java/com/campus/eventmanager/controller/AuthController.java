@@ -16,6 +16,7 @@ import com.campus.eventmanager.dto.UserDTO;
 import com.campus.eventmanager.model.AuthRequest;
 // import org.springframework.security.core.userdetails.UserDetails;
 // import com.campus.eventmanager.service.UserService;
+import com.campus.eventmanager.response.ApiResponse;
 
 
 @RestController
@@ -32,7 +33,7 @@ public class AuthController {
 private CustomUserDetailsService userDetailsService;
 
     @PostMapping("/login")
-public String login(@RequestBody AuthRequest request) {
+public ResponseEntity<ApiResponse<String>> login(@RequestBody AuthRequest request) {
 
     authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(
@@ -43,15 +44,17 @@ public String login(@RequestBody AuthRequest request) {
 
     UserDetails userDetails = userDetailsService.loadUserByUsername(request.getEmail());
 
-    return jwtUtil.generateToken(userDetails);
+    String token = jwtUtil.generateToken(userDetails);
+    return ResponseEntity.ok(ApiResponse.success("Login successful", token));
 }
 
 @Autowired
     private UserService userService;
 
   @PostMapping("/register")
-   public ResponseEntity<UserDTO> register(@Valid @RequestBody UserDTO userDTO) {
-    return ResponseEntity.ok(userService.register(userDTO));
+   public ResponseEntity<ApiResponse<UserDTO>> register(@Valid @RequestBody UserDTO userDTO) {
+    UserDTO registeredUser = userService.register(userDTO);
+    return ResponseEntity.ok(ApiResponse.success("User registered successfully", registeredUser));
 }
 
 }
