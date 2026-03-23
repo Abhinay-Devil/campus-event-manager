@@ -29,6 +29,11 @@ protected void doFilterInternal(
         @NonNull FilterChain filterChain)
         throws ServletException, IOException {
 
+            if (request.getServletPath().contains("/api/auth")) {
+    filterChain.doFilter(request, response);
+    return;
+}
+
     String path = request.getServletPath();
 
     // Swagger endpoints bypass
@@ -74,4 +79,6 @@ protected void doFilterInternal(
 
         filterChain.doFilter(request, response);
     }
+
+    
 }

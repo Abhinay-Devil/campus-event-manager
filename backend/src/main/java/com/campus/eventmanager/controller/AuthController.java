@@ -57,4 +57,5 @@ public ResponseEntity<ApiResponse<String>> login(@RequestBody AuthRequest reques
     return ResponseEntity.ok(ApiResponse.success("User registered successfully", registeredUser));
 }
 
+
 }
