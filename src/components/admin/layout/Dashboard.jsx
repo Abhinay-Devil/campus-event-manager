@@ -1,4 +1,6 @@
-import Sidebar from "./Sidebar";
+//Dashborad.jsx//
+
+import Sidebar from "./Sidebar";   // (check filename case)
 import Navbar from "./Navbar";
 
 const DashboardLayout = ({ children }) => {

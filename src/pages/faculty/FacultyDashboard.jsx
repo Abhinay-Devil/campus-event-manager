@@ -17,7 +17,7 @@ import {
   ListItemText,
 } from "@mui/material";
 import { Add as AddIcon, Event as EventIcon } from "@mui/icons-material";
-import DashboardLayout from "../../components/layout/DashboardLayout";
+import DashboardLayout from "../../components/admin/layout/Dashboard.jsx";
 import API from "../../api/axios";
 
 const FacultyDashboard = () => {

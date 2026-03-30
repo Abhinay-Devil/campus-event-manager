@@ -13,7 +13,7 @@ import {
   Assignment as AssignmentIcon,
 } from "@mui/icons-material";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
-import DashboardLayout from "../../components/layout/DashboardLayout";
+import DashboardLayout from "../../components/admin/layout/Dashboard.jsx";
 import { getDashboardStats } from "../../api/adminApi";
 
 const AdminDashboard = () => {

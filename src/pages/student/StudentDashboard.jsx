@@ -13,7 +13,7 @@ import {
   Chip,
 } from "@mui/material";
 import { Event as EventIcon, CheckCircle as CheckCircleIcon } from "@mui/icons-material";
-import DashboardLayout from "../../components/layout/DashboardLayout";
+import DashboardLayout from "../../components/admin/layout/Dashboard.jsx";
 import API from "../../api/axios";
 
 const StudentDashboard = () => {
